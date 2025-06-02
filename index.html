@@ -726,7 +726,7 @@
 
             function playAlarmSequence(soundType) {
                 let alarmCount = 0;
-                const maxAlarms = 45; // 45 seconds of alarms (one per second)
+                const maxAlarms = 10; // 45 seconds of alarms (one per second)
 
                 currentAlarmInterval = setInterval(() => {
                     if (alarmCount >= maxAlarms) {
