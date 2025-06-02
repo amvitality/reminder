@@ -1,0 +1,974 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Self-Care Reminder App</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            :root {
+                --primary: #e83e8c;
+                --secondary: #ff6b9d;
+                --accent: #ff8eab;
+                --light: #fff5f9;
+                --dark: #5a2a44;
+                --success: #8bd3bb;
+                --text: #4a3a40;
+            }
+
+            body {
+                font-family: "Poppins", sans-serif;
+                background: linear-gradient(135deg, #fff5f9, #fef0f6);
+                color: var(--text);
+                min-height: 100vh;
+                padding: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .container {
+                max-width: 800px;
+                width: 100%;
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 15px 40px rgba(232, 62, 140, 0.15);
+                overflow: hidden;
+            }
+
+            header {
+                background: linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--secondary)
+                );
+                color: white;
+                padding: 25px 30px;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            header::before {
+                content: "";
+                position: absolute;
+                top: -50px;
+                right: -50px;
+                width: 200px;
+                height: 200px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+            }
+
+            header::after {
+                content: "";
+                position: absolute;
+                bottom: -80px;
+                left: -30px;
+                width: 150px;
+                height: 150px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+            }
+
+            h1 {
+                font-family: "Playfair Display", serif;
+                font-weight: 700;
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+                position: relative;
+                z-index: 2;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+                opacity: 0.9;
+                max-width: 500px;
+                margin: 0 auto;
+                position: relative;
+                z-index: 2;
+            }
+
+            .app-content {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            .settings-section {
+                flex: 1;
+                min-width: 300px;
+                padding: 30px;
+                border-right: 1px solid #f0e6eb;
+            }
+
+            .dashboard-section {
+                flex: 1;
+                min-width: 300px;
+                padding: 30px;
+                background: var(--light);
+            }
+
+            h2 {
+                font-family: "Playfair Display", serif;
+                font-weight: 600;
+                font-size: 1.8rem;
+                color: var(--primary);
+                margin-bottom: 25px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            h2 i {
+                background: rgba(232, 62, 140, 0.15);
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .note {
+                background: #fff0f5;
+                padding: 15px;
+                border-radius: 12px;
+                margin-bottom: 25px;
+                font-size: 0.95rem;
+                color: var(--dark);
+                border-left: 4px solid var(--primary);
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .form-group {
+                position: relative;
+            }
+
+            label {
+                display: block;
+                font-weight: 500;
+                margin-bottom: 8px;
+                color: var(--dark);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            label i {
+                color: var(--primary);
+                font-size: 1.1rem;
+            }
+
+            input[type="time"],
+            input[type="number"],
+            select,
+            input[type="text"] {
+                padding: 14px 15px;
+                border: 1px solid #e8d0da;
+                border-radius: 12px;
+                width: 100%;
+                font-family: "Poppins", sans-serif;
+                font-size: 1rem;
+                background: #fff9fb;
+                transition: all 0.3s ease;
+            }
+
+            input:focus,
+            select:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(232, 62, 140, 0.2);
+            }
+
+            .checkbox-group {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 0;
+            }
+
+            input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+                accent-color: var(--primary);
+            }
+
+            button {
+                padding: 15px 25px;
+                background: linear-gradient(
+                    to right,
+                    var(--primary),
+                    var(--secondary)
+                );
+                color: white;
+                border: none;
+                border-radius: 12px;
+                cursor: pointer;
+                font-family: "Poppins", sans-serif;
+                font-size: 1.1rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                box-shadow: 0 4px 15px rgba(232, 62, 140, 0.3);
+            }
+
+            button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(232, 62, 140, 0.4);
+            }
+
+            .divider {
+                height: 1px;
+                background: linear-gradient(
+                    to right,
+                    transparent,
+                    #e8d0da,
+                    transparent
+                );
+                margin: 20px 0;
+            }
+
+            .dashboard-content {
+                background: white;
+                border-radius: 16px;
+                padding: 25px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+                margin-bottom: 30px;
+            }
+
+            .dashboard-item {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 15px;
+                padding-bottom: 15px;
+                border-bottom: 1px dashed #f0e6eb;
+            }
+
+            .dashboard-item:last-child {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+
+            .dashboard-label {
+                font-weight: 500;
+                color: var(--dark);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .dashboard-value {
+                font-weight: 500;
+                color: var(--primary);
+            }
+
+            .test-buttons {
+                display: flex;
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+
+            .test-buttons button {
+                flex: 1;
+                min-width: 140px;
+            }
+
+            .test-buttons button.secondary {
+                background: white;
+                color: var(--primary);
+                border: 1px solid var(--primary);
+                box-shadow: none;
+            }
+
+            .test-buttons button.secondary:hover {
+                background: #fff5f9;
+            }
+
+            .floral-decoration {
+                text-align: center;
+                margin-top: 20px;
+                color: #d4a5b5;
+                font-size: 2rem;
+                letter-spacing: 10px;
+            }
+
+            @media (max-width: 768px) {
+                .app-content {
+                    flex-direction: column;
+                }
+
+                .settings-section {
+                    border-right: none;
+                    border-bottom: 1px solid #f0e6eb;
+                }
+
+                header {
+                    padding: 20px;
+                }
+
+                h1 {
+                    font-size: 2rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1><i class="fas fa-heart"></i> Self-Care Reminder</h1>
+                <p class="subtitle">
+                    A gentle nudge for your daily wellness routine
+                </p>
+            </header>
+
+            <div class="app-content">
+                <div class="settings-section">
+                    <h2><i class="fas fa-cog"></i> Settings</h2>
+                    <div class="note">
+                        <i class="fas fa-info-circle"></i> Please enable
+                        notifications in your browser for reminders to work
+                        properly, even when the tab is closed.
+                    </div>
+
+                    <form id="settingsForm">
+                        <div class="form-group">
+                            <h3><i class="fas fa-moon"></i> Sleep</h3>
+                            <label for="bedtime"
+                                ><i class="fas fa-bed"></i> Bedtime:</label
+                            >
+                            <input type="time" id="bedtime" name="bedtime" />
+
+                            <label for="wakeup"
+                                ><i class="fas fa-sun"></i> Wake-up time:</label
+                            >
+                            <input type="time" id="wakeup" name="wakeup" />
+
+                            <label for="bedtimeReminder"
+                                ><i class="fas fa-bell"></i> Reminder before
+                                bedtime (minutes):</label
+                            >
+                            <input
+                                type="number"
+                                id="bedtimeReminder"
+                                name="bedtimeReminder"
+                                min="0"
+                                value="30"
+                            />
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="form-group">
+                            <h3><i class="fas fa-utensils"></i> Eat</h3>
+                            <label for="breakfast"
+                                ><i class="fas fa-coffee"></i> Breakfast
+                                time:</label
+                            >
+                            <input
+                                type="time"
+                                id="breakfast"
+                                name="breakfast"
+                            />
+
+                            <label for="lunch"
+                                ><i class="fas fa-bread-slice"></i> Lunch
+                                time:</label
+                            >
+                            <input type="time" id="lunch" name="lunch" />
+
+                            <label for="dinner"
+                                ><i class="fas fa-utensil-spoon"></i> Dinner
+                                time:</label
+                            >
+                            <input type="time" id="dinner" name="dinner" />
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="form-group">
+                            <h3><i class="fas fa-couch"></i> Rest</h3>
+                            <div class="checkbox-group">
+                                <input
+                                    type="checkbox"
+                                    id="hourlyRest"
+                                    name="hourlyRest"
+                                />
+                                <label for="hourlyRest"
+                                    >Enable hourly rest reminders</label
+                                >
+                            </div>
+
+                            <label for="middayRest"
+                                ><i class="fas fa-clock"></i> Midday rest
+                                time:</label
+                            >
+                            <input
+                                type="time"
+                                id="middayRest"
+                                name="middayRest"
+                            />
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="form-group">
+                            <h3>
+                                <i class="fas fa-calendar-day"></i> Daily
+                                Reminders
+                            </h3>
+                            <label for="dailyReminderTime"
+                                ><i class="fas fa-clock"></i> Time:</label
+                            >
+                            <input
+                                type="time"
+                                id="dailyReminderTime"
+                                name="dailyReminderTime"
+                            />
+
+                            <label for="dailyReminderMessage"
+                                ><i class="fas fa-comment"></i> Message:</label
+                            >
+                            <input
+                                type="text"
+                                id="dailyReminderMessage"
+                                name="dailyReminderMessage"
+                                placeholder="e.g., Take a deep breath"
+                            />
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="form-group">
+                            <h3>
+                                <i class="fas fa-volume-up"></i> Sound Settings
+                            </h3>
+                            <div class="checkbox-group">
+                                <input
+                                    type="checkbox"
+                                    id="soundEnabled"
+                                    name="soundEnabled"
+                                    checked
+                                />
+                                <label for="soundEnabled"
+                                    >Enable sound alerts</label
+                                >
+                            </div>
+
+                            <label for="soundType"
+                                ><i class="fas fa-music"></i> Alarm
+                                sound:</label
+                            >
+                            <select id="soundType" name="soundType">
+                                <option value="beep">Beep</option>
+                                <option value="chime">Chime</option>
+                                <option value="bell">Bell</option>
+                                <option value="notification">
+                                    Notification
+                                </option>
+                            </select>
+
+                            <button type="button" id="testSound">
+                                <i class="fas fa-play"></i> Test Sound
+                            </button>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <button type="submit">
+                            <i class="fas fa-save"></i> Save Settings
+                        </button>
+                    </form>
+                </div>
+
+                <div class="dashboard-section">
+                    <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+
+                    <div class="dashboard-content">
+                        <div class="dashboard-item">
+                            <span class="dashboard-label"
+                                ><i class="fas fa-bell"></i> Next
+                                reminder:</span
+                            >
+                            <span class="dashboard-value" id="nextReminder"
+                                >Not set</span
+                            >
+                        </div>
+
+                        <div class="dashboard-item">
+                            <span class="dashboard-label"
+                                ><i class="fas fa-moon"></i> Sleep
+                                schedule:</span
+                            >
+                            <span class="dashboard-value" id="sleepSchedule"
+                                >Not set</span
+                            >
+                        </div>
+
+                        <div class="dashboard-item">
+                            <span class="dashboard-label"
+                                ><i class="fas fa-utensils"></i> Meal
+                                schedule:</span
+                            >
+                            <span class="dashboard-value" id="mealSchedule"
+                                >Not set</span
+                            >
+                        </div>
+
+                        <div class="dashboard-item">
+                            <span class="dashboard-label"
+                                ><i class="fas fa-couch"></i> Rest
+                                settings:</span
+                            >
+                            <span class="dashboard-value" id="restSettings"
+                                >Not set</span
+                            >
+                        </div>
+                    </div>
+
+                    <div class="test-buttons">
+                        <button id="testNotification">
+                            <i class="fas fa-bell"></i> Test Notification
+                        </button>
+                        <button class="secondary" id="viewTips">
+                            <i class="fas fa-lightbulb"></i> Self-Care Tips
+                        </button>
+                    </div>
+
+                    <div class="floral-decoration">
+                        <i class="fas fa-spa"></i> <i class="fas fa-leaf"></i>
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let timeoutId;
+            let currentAlarmInterval;
+
+            // Encouraging messages to include with notifications
+            const encouragingMessages = [
+                "I'm proud of you",
+                "You did well",
+                "I love you",
+                "You're amazing",
+                "Keep up the great work",
+                "You're doing fantastic",
+                "Believe in yourself",
+                "You've got this",
+                "You're stronger than you think",
+                "Every step counts",
+                "You're making progress",
+                "You're worth it",
+                "Take care of yourself",
+                "You deserve good things",
+                "You're important",
+                "You matter",
+                "Stay positive",
+                "You're capable of great things",
+                "Trust yourself",
+                "You're on the right path"
+            ];
+
+            function getRandomEncouragingMessage() {
+                return encouragingMessages[Math.floor(Math.random() * encouragingMessages.length)];
+            }
+
+            function startReminderService() {
+                const settings = getSettings();
+                if (!settings) return;
+
+                const now = new Date();
+                const nextReminder = getNextReminder(settings);
+
+                if (!nextReminder) {
+                    setTimeout(startReminderService, 60000); // Check again in 1 minute
+                    return;
+                }
+
+                const timeUntilReminder = nextReminder.time - now.getTime();
+
+                updateNextReminderDisplay(nextReminder);
+
+                if (timeUntilReminder > 0) {
+                    timeoutId = setTimeout(() => {
+                        triggerReminder(nextReminder, settings);
+                        startReminderService(); // Schedule next reminder
+                    }, timeUntilReminder);
+                } else {
+                    startReminderService(); // If time has passed, check for next reminder
+                }
+            }
+
+            function getSettings() {
+                const formData = new FormData(document.getElementById('settingsForm'));
+                return {
+                    bedtime: formData.get('bedtime'),
+                    wakeup: formData.get('wakeup'),
+                    breakfast: formData.get('breakfast'),
+                    lunch: formData.get('lunch'),
+                    dinner: formData.get('dinner'),
+                    bedtimeReminder: parseInt(formData.get('bedtimeReminder')) || 30,
+                    hourlyRest: formData.get('hourlyRest') === 'on',
+                    middayRest: formData.get('middayRest'),
+                    dailyReminderTime: formData.get('dailyReminderTime'),
+                    dailyReminderMessage: formData.get('dailyReminderMessage'),
+                    soundEnabled: formData.get('soundEnabled') === 'on',
+                    soundType: formData.get('soundType') || 'beep'
+                };
+            }
+
+            function getNextReminder(settings) {
+                const now = new Date();
+                const reminders = [];
+
+                // Add meal reminders
+                if (settings.breakfast) {
+                    const time = getNextTimeToday(settings.breakfast);
+                    if (time > now) reminders.push({ type: 'breakfast', time: time.getTime() });
+                }
+                if (settings.lunch) {
+                    const time = getNextTimeToday(settings.lunch);
+                    if (time > now) reminders.push({ type: 'lunch', time: time.getTime() });
+                }
+                if (settings.dinner) {
+                    const time = getNextTimeToday(settings.dinner);
+                    if (time > now) reminders.push({ type: 'dinner', time: time.getTime() });
+                }
+
+                // Add bedtime reminder
+                if (settings.bedtime) {
+                    const bedtime = getNextTimeToday(settings.bedtime);
+                    const reminderTime = new Date(bedtime.getTime() - settings.bedtimeReminder * 60000);
+                    if (reminderTime > now) reminders.push({ type: 'bedtime reminder', time: reminderTime.getTime() });
+                }
+
+                // Add daily reminder
+                if (settings.dailyReminderTime) {
+                    const time = getNextTimeToday(settings.dailyReminderTime);
+                    if (time > now) reminders.push({ type: 'daily reminder', time: time.getTime() });
+                }
+
+                // Add midday rest
+                if (settings.middayRest) {
+                    const time = getNextTimeToday(settings.middayRest);
+                    if (time > now) reminders.push({ type: 'midday rest', time: time.getTime() });
+                }
+
+                // Sort by time and return the earliest
+                reminders.sort((a, b) => a.time - b.time);
+                return reminders[0] || null;
+            }
+
+            function getNextTimeToday(timeString) {
+                const [hours, minutes] = timeString.split(':').map(Number);
+                const time = new Date();
+                time.setHours(hours, minutes, 0, 0);
+
+                // If time has passed today, set for tomorrow
+                if (time <= new Date()) {
+                    time.setDate(time.getDate() + 1);
+                }
+
+                return time;
+            }
+
+            function triggerReminder(reminder, settings) {
+                // Play alarm sound for 45 seconds
+                if (settings.soundEnabled) {
+                    playAlarmSequence(settings.soundType);
+                }
+
+                const encouragingMessage = getRandomEncouragingMessage();
+                const reminderBody = `Time for ${reminder.type}! ${encouragingMessage} 💙`;
+
+                // Show notification with action to stop alarm
+                if (Notification.permission === "granted") {
+                    const notification = new Notification("Reminder", {
+                        body: reminderBody,
+                        requireInteraction: true
+                    });
+
+                    notification.onclick = function() {
+                        stopAlarm();
+                        notification.close();
+                    };
+                } else {
+                    // Fallback alert with OK button
+                    const userResponse = confirm(reminderBody + "\n\nClick OK to stop the alarm.");
+                    if (userResponse) {
+                        stopAlarm();
+                    }
+                }
+            }
+
+            function playAlarmSequence(soundType) {
+                let alarmCount = 0;
+                const maxAlarms = 45; // 45 seconds of alarms (one per second)
+
+                currentAlarmInterval = setInterval(() => {
+                    if (alarmCount >= maxAlarms) {
+                        stopAlarm();
+                        return;
+                    }
+
+                    playSound(soundType);
+                    alarmCount++;
+                }, 1000);
+            }
+
+            function stopAlarm() {
+                if (currentAlarmInterval) {
+                    clearInterval(currentAlarmInterval);
+                    currentAlarmInterval = null;
+                }
+            }
+
+            function updateNextReminderDisplay(reminder) {
+                if (reminder) {
+                    const time = new Date(reminder.time);
+                    const timeString = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    nextReminderEl.textContent = `${reminder.type} at ${timeString}`;
+                } else {
+                    nextReminderEl.textContent = "No upcoming reminders";
+                }
+            }
+            // UI elements
+            const nextReminderEl = document.getElementById("nextReminder");
+            const sleepScheduleEl = document.getElementById("sleepSchedule");
+            const mealScheduleEl = document.getElementById("mealSchedule");
+            const restSettingsEl = document.getElementById("restSettings");
+
+            // Initialize form with default values
+            document.addEventListener("DOMContentLoaded", function () {
+                // Set some default times for better UX
+                document.getElementById("bedtime").value = "22:30";
+                document.getElementById("wakeup").value = "07:00";
+                document.getElementById("breakfast").value = "08:00";
+                document.getElementById("lunch").value = "13:00";
+                document.getElementById("dinner").value = "19:00";
+                document.getElementById("middayRest").value = "14:00";
+                document.getElementById("dailyReminderTime").value = "15:00";
+                document.getElementById("dailyReminderMessage").value =
+                    "Take a moment for yourself";
+
+                // Update dashboard
+                updateDashboard();
+
+                // Set a random encouraging message as the next reminder
+                setRandomEncouragingMessage();
+
+                // Start the reminder service
+                startReminderService();
+            });
+
+            // Form submission
+            document
+                .getElementById("settingsForm")
+                .addEventListener("submit", function (event) {
+                    event.preventDefault();
+
+                    // Get form values
+                    const bedtime = document.getElementById("bedtime").value;
+                    const wakeup = document.getElementById("wakeup").value;
+                    const breakfast =
+                        document.getElementById("breakfast").value;
+                    const lunch = document.getElementById("lunch").value;
+                    const dinner = document.getElementById("dinner").value;
+                    const dailyReminderTime =
+                        document.getElementById("dailyReminderTime").value;
+
+                    // Show success message
+                    showNotification(
+                        "Settings Saved",
+                        "Your self-care preferences have been saved successfully!",
+                    );
+
+                    // Update dashboard
+                    updateDashboard();
+
+                    // Restart reminder service with new settings
+                    clearTimeout(timeoutId); // Clear the existing timeout
+                    startReminderService();
+                });
+
+            // Test notification button
+            document
+                .getElementById("testNotification")
+                .addEventListener("click", function () {
+                    showNotification(
+                        "Self-Care Reminder",
+                        "This is a test notification. Remember to take care of yourself!",
+                    );
+                });
+
+            // Test sound button
+            document
+                .getElementById("testSound")
+                .addEventListener("click", function () {
+                    const soundType =
+                        document.getElementById("soundType").value;
+                    playSound(soundType);
+                });
+
+            // View tips button
+            document
+                .getElementById("viewTips")
+                .addEventListener("click", function () {
+                    const tip = getRandomSelfCareTip();
+                    showNotification("Self-Care Tip", tip);
+                });
+
+            // Update dashboard with current settings
+            function updateDashboard() {
+                const bedtime =
+                    document.getElementById("bedtime").value || "Not set";
+                const wakeup =
+                    document.getElementById("wakeup").value || "Not set";
+                const breakfast =
+                    document.getElementById("breakfast").value || "Not set";
+                const lunch =
+                    document.getElementById("lunch").value || "Not set";
+                const dinner =
+                    document.getElementById("dinner").value || "Not set";
+                const dailyTime =
+                    document.getElementById("dailyReminderTime").value ||
+                    "Not set";
+
+                sleepScheduleEl.textContent = `${bedtime} - ${wakeup}`;
+                mealScheduleEl.textContent = `${breakfast}, ${lunch}, ${dinner}`;
+
+                // Update rest settings
+                const hourlyRest =
+                    document.getElementById("hourlyRest").checked;
+                const middayRest = document.getElementById("middayRest").value;
+                restSettingsEl.textContent = hourlyRest
+                    ? `Hourly rest + ${middayRest || "Midday rest"}`
+                    : middayRest || "Not set";
+            }
+
+            // Set a random encouraging message
+            function setRandomEncouragingMessage() {
+                const message = getRandomEncouragingMessage();
+                nextReminderEl.textContent = message;
+            }
+
+            // Self-care tips
+            function getRandomSelfCareTip() {
+                const tips = [
+                    "Take 5 deep breaths to center yourself",
+                    "Drink a glass of water to stay hydrated",
+                    "Step outside for fresh air and sunshine",
+                    "Stretch your body for 5 minutes",
+                    "Write down 3 things you're grateful for",
+                    "Listen to your favorite song",
+                    "Do a quick 5-minute meditation",
+                    "Call a friend or loved one",
+                    "Enjoy a healthy snack",
+                    "Read a few pages of a book you love",
+                    "Do something creative for 10 minutes",
+                    "Take a short walk around your space",
+                ];
+                return tips[Math.floor(Math.random() * tips.length)];
+            }
+
+           // Simulated sound functions
+            let audioContext;
+            let oscillator;
+
+            function playSound(soundType) {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+
+                oscillator = audioContext.createOscillator();
+                oscillator.type = 'sine'; // Default to sine wave
+
+                switch (soundType) {
+                    case 'beep':
+                        oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // 440 Hz
+                        break;
+                    case 'chime':
+                        oscillator.frequency.setValueAtTime(880, audioContext.currentTime); // 880 Hz
+                        break;
+                    case 'bell':
+                        oscillator.frequency.setValueAtTime(660, audioContext.currentTime); // 660 Hz
+                        break;
+                    case 'notification':
+                        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime); // 1000 Hz
+                        break;
+                }
+
+                oscillator.connect(audioContext.destination);
+                oscillator.start();
+
+                // Stop the sound after a short duration
+                oscillator.stop(audioContext.currentTime + 0.5); // Stop after 0.5 seconds
+            }
+
+            // Show notification
+            function showNotification(title, message) {
+                if (!("Notification" in window)) {
+                    alert(
+                        "This browser does not support desktop notifications",
+                    );
+                } else if (Notification.permission === "granted") {
+                    new Notification(title, { body: message });
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission().then(
+                        function (permission) {
+                            if (permission === "granted") {
+                                new Notification(title, { body: message });
+                            }
+                        },
+                    );
+                }
+
+                // Create a visual alert in the app
+                const alertBox = document.createElement("div");
+                alertBox.style.position = "fixed";
+                alertBox.style.bottom = "20px";
+                alertBox.style.right = "20px";
+                alertBox.style.backgroundColor = "white";
+                alertBox.style.color = "var(--primary)";
+                alertBox.style.padding = "15px 25px";
+                alertBox.style.borderRadius = "12px";
+                alertBox.style.boxShadow = "0 5px 15px rgba(0,0,0,0.1)";
+                alertBox.style.zIndex = "1000";
+                alertBox.style.borderLeft = "4px solid var(--primary)";
+                alertBox.innerHTML = `<strong>${title}</strong><br>${message}`;
+
+                document.body.appendChild(alertBox);
+
+                setTimeout(() => {
+                    alertBox.style.opacity = "0";
+                    setTimeout(() => {
+                        document.body.removeChild(alertBox);
+                    }, 300);
+                }, 3000);
+            }
+        </script>
+    </body>
+</html>
